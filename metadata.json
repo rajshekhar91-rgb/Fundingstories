@@ -1,0 +1,5 @@
+{
+  "name": "findingstories",
+  "description": "A minimalist storytelling app inspired by famous authors, featuring historical sourcing and AI image generation.",
+  "requestFramePermissions": []
+}
