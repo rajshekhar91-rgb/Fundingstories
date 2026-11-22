@@ -1,31 +1,15 @@
 import { GoogleGenAI } from "@google/genai";
+import { StorySchema } from "../shared/storySchema";
 import { z } from "zod";
 import type { VercelRequest, VercelResponse } from "@vercel/node";
 
-const InspirationSchema = z.object({
-  author: z.string(),
-  book: z.string(),
-  year: z.string(),
-  context: z.string(),
-  authorUrl: z.string().url().optional(),
-});
-
-const StorySchema = z.object({
-  title: z.string().min(1),
-  content: z.string().min(1),
-  inspirations: z.array(InspirationSchema).default([]),
-});
-
-const RequestSchema = z.object({
-  keywords: z.string().trim().min(1).max(200),
-});
-
+const RequestSchema = z.object({ keywords: z.string().trim().min(1).max(200) });
 const MODEL = "gemini-2.5-flash";
 const WINDOW_MS = 60_000;
 const MAX_REQUESTS_PER_WINDOW = 10;
 const requestsByIp = new Map<string, { count: number; resetAt: number }>();
 
-// Keep this prompt and its response contract aligned with the original client service.
+// Preserve the original Gemini prompt, model, search tool and output contract.
 const buildPrompt = (keywords: string) => `
     Create a short story (approx 300-500 words) weaving together these keywords: "${keywords}".
     
@@ -72,7 +56,6 @@ function isRateLimited(ip: string): boolean {
 async function generateValidatedStory(keywords: string) {
   const apiKey = process.env.GEMINI_API_KEY;
   if (!apiKey) throw new Error("Story generation is not configured on the server.");
-
   const ai = new GoogleGenAI({ apiKey });
   const prompt = buildPrompt(keywords);
 
@@ -84,8 +67,7 @@ async function generateValidatedStory(keywords: string) {
         config: { tools: [{ googleSearch: {} }] },
       });
       const text = (response.text || "").replace(/```json/g, "").replace(/```/g, "").trim();
-      const parsed = JSON.parse(text);
-      return StorySchema.parse(parsed);
+      return StorySchema.parse(JSON.parse(text));
     } catch (error) {
       if (attempt === 1) {
         console.error("Story generation or validation failed:", error);
@@ -101,22 +83,13 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     res.setHeader("Allow", "POST");
     return res.status(405).json({ error: "Method not allowed." });
   }
-
-  const parsedRequest = RequestSchema.safeParse(req.body);
-  if (!parsedRequest.success) {
-    return res.status(400).json({ error: "Enter keywords (up to 200 characters)." });
-  }
-
-  if (isRateLimited(getClientIp(req))) {
-    return res.status(429).json({ error: "Too many requests. Please wait a minute and try again." });
-  }
-
+  const request = RequestSchema.safeParse(req.body);
+  if (!request.success) return res.status(400).json({ error: "Enter keywords (up to 200 characters)." });
+  if (isRateLimited(getClientIp(req))) return res.status(429).json({ error: "Too many requests. Please wait a minute and try again." });
   try {
-    const story = await generateValidatedStory(parsedRequest.data.keywords);
-    return res.status(200).json(story);
+    return res.status(200).json(await generateValidatedStory(request.data.keywords));
   } catch (error) {
     const message = error instanceof Error ? error.message : "Failed to generate story. Please try again.";
-    const status = message.includes("not configured") ? 500 : 502;
-    return res.status(status).json({ error: message });
+    return res.status(message.includes("not configured") ? 500 : 502).json({ error: message });
   }
 }
