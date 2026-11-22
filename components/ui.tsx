@@ -1,20 +1,18 @@
 import React from 'react';
 
-// Button Component
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: 'primary' | 'secondary' | 'ghost';
   isLoading?: boolean;
 }
 
-export const Button: React.FC<ButtonProps> = ({ 
-  children, 
-  variant = 'primary', 
-  isLoading, 
-  className = '', 
-  ...props 
+export const Button: React.FC<ButtonProps> = ({
+  children,
+  variant = 'primary',
+  isLoading,
+  className = '',
+  ...props
 }) => {
   const baseStyles = "inline-flex items-center justify-center px-6 py-3 text-sm font-medium rounded-full transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-offset-2";
-  
   const variants = {
     primary: "bg-[#1D1D1F] text-white hover:bg-[#333336] focus:ring-gray-900 shadow-lg shadow-gray-200",
     secondary: "bg-white text-[#1D1D1F] border border-[#D1D1D6] hover:bg-gray-50 focus:ring-gray-200",
@@ -22,11 +20,7 @@ export const Button: React.FC<ButtonProps> = ({
   };
 
   return (
-    <button 
-      className={`${baseStyles} ${variants[variant]} ${className}`}
-      disabled={isLoading || props.disabled}
-      {...props}
-    >
+    <button className={`${baseStyles} ${variants[variant]} ${className}`} disabled={isLoading || props.disabled} {...props}>
       {isLoading ? (
         <span className="flex items-center gap-2">
           <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24">
@@ -40,19 +34,12 @@ export const Button: React.FC<ButtonProps> = ({
   );
 };
 
-// Input Component
 interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {}
 
-export const Input: React.FC<InputProps> = ({ className = '', ...props }) => {
-  return (
-    <input
-      className={`w-full px-4 py-4 bg-white border-none rounded-2xl text-lg text-[#1D1D1F] placeholder-[#86868B] shadow-sm ring-1 ring-black/5 focus:ring-2 focus:ring-[#0071E3] focus:outline-none transition-all duration-200 ${className}`}
-      {...props}
-    />
-  );
-};
+export const Input: React.FC<InputProps> = ({ className = '', ...props }) => (
+  <input className={`w-full px-4 py-4 bg-white border-none rounded-2xl text-lg text-[#1D1D1F] placeholder-[#86868B] shadow-sm ring-1 ring-black/5 focus:ring-2 focus:ring-[#0071E3] focus:outline-none transition-all duration-200 ${className}`} {...props} />
+);
 
-// Card Component
 export const Card: React.FC<{ children: React.ReactNode; className?: string }> = ({ children, className = '' }) => (
   <div className={`bg-white rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-white/50 overflow-hidden ${className}`}>
     {children}

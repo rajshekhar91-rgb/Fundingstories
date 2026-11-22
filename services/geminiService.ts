@@ -8,8 +8,6 @@ export const generateStoryFromKeywords = async (keywords: string): Promise<Story
   if (!apiKey) throw new Error("API Key is missing.");
 
   const ai = new GoogleGenAI({ apiKey });
-  
-  // Using gemini-2.5-flash for speed and search capabilities
   const model = "gemini-2.5-flash";
 
   const prompt = `
@@ -44,18 +42,11 @@ export const generateStoryFromKeywords = async (keywords: string): Promise<Story
       contents: prompt,
       config: {
         tools: [{ googleSearch: {} }],
-        // responseMimeType: "application/json" is NOT allowed with googleSearch
-        // We rely on the prompt to format JSON.
       },
     });
-
     let text = response.text || "";
-    
-    // Clean up markdown code blocks if present
     text = text.replace(/```json/g, '').replace(/```/g, '').trim();
-
-    const data = JSON.parse(text) as StoryData;
-    return data;
+    return JSON.parse(text) as StoryData;
   } catch (error) {
     console.error("Story generation failed:", error);
     throw new Error("Failed to craft your story. Please try again.");
