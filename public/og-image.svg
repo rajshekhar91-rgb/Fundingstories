@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <rect width="1200" height="630" fill="#fff"/>
+  <path d="M0 0h14v630H0z" fill="#387ed1"/>
+  <text x="100" y="290" fill="#424242" font-family="Arial,sans-serif" font-size="76" font-weight="400">Fundingstories</text>
+  <text x="104" y="365" fill="#666" font-family="Arial,sans-serif" font-size="30">Stories from keywords and literary history</text>
+</svg>

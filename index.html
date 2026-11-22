@@ -1,57 +1,19 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>findingstories</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Merriweather:ital,wght@0,300;0,400;0,700;1,300&display=swap" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <style>
-      body {
-        font-family: 'Inter', sans-serif;
-        -webkit-font-smoothing: antialiased;
-        -moz-osx-font-smoothing: grayscale;
-        background-color: #F5F5F7; /* Apple light gray */
-        color: #1D1D1F; /* Apple dark text */
-      }
-      /* Custom Scrollbar for a cleaner look */
-      ::-webkit-scrollbar {
-        width: 8px;
-      }
-      ::-webkit-scrollbar-track {
-        background: transparent;
-      }
-      ::-webkit-scrollbar-thumb {
-        background: #D1D1D6;
-        border-radius: 4px;
-      }
-      ::-webkit-scrollbar-thumb:hover {
-        background: #AEAEB2;
-      }
-      .glass-panel {
-        background: rgba(255, 255, 255, 0.85);
-        backdrop-filter: blur(20px);
-        -webkit-backdrop-filter: blur(20px);
-      }
-    </style>
-  <script type="importmap">
-{
-  "imports": {
-    "uuid": "https://aistudiocdn.com/uuid@^13.0.0",
-    "lucide-react": "https://aistudiocdn.com/lucide-react@^0.555.0",
-    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/",
-    "@google/genai": "https://aistudiocdn.com/@google/genai@^1.30.0",
-    "react/": "https://aistudiocdn.com/react@^19.2.0/",
-    "react": "https://aistudiocdn.com/react@^19.2.0",
-    "jspdf": "https://aistudiocdn.com/jspdf@^3.0.4"
-  }
-}
-</script>
-<link rel="stylesheet" href="/index.css">
-</head>
+    <meta name="description" content="Generate short stories inspired by biographies and literary history from a set of keywords." />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Fundingstories" />
+    <meta property="og:description" content="Generate stories inspired by biographies and literary history." />
+    <meta property="og:image" content="/og-image.svg" />
+    <meta name="theme-color" content="#ffffff" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>Fundingstories — Stories from keywords</title>
+  </head>
   <body>
     <div id="root"></div>
-  <script type="module" src="/index.tsx"></script>
-</body>
+    <script type="module" src="/index.tsx"></script>
+  </body>
 </html>
