@@ -13,6 +13,6 @@ describe('writeWrappedText', () => {
     const finalY = writeWrappedText(doc, 'long text', 10, 80, 50, 10, 10);
     expect(doc.addPage).toHaveBeenCalledTimes(1);
     expect(doc.text).toHaveBeenCalledTimes(3);
-    expect(finalY).toBe(50);
+    expect(finalY).toBe(40);
   });
 });

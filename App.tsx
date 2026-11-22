@@ -108,7 +108,7 @@ function App() {
               <label htmlFor="keywords">Enter keywords</label>
               <Input id="keywords" placeholder="e.g. apple, garage, innovation, betrayal" value={keywords} onChange={event => setKeywords(event.target.value.slice(0, 200))} disabled={isGenerating} maxLength={200} required />
               <div className="form-actions">
-                <Button type="submit" disabled={!keywords.trim() || isGenerating} isLoading={isGenerating}>Find story</Button>
+                <Button type="submit" disabled={!keywords.trim() || isGenerating} isLoading={false}>Find story</Button>
                 <span className="character-count">{keywords.length}/200</span>
               </div>
             </form>
