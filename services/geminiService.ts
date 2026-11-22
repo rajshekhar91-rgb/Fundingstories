@@ -1,54 +1,20 @@
-import { GoogleGenAI } from "@google/genai";
 import { StoryData } from "../types";
 
-// Ensure we have an API key from the environment
-const apiKey = process.env.API_KEY || '';
-
 export const generateStoryFromKeywords = async (keywords: string): Promise<StoryData> => {
-  if (!apiKey) throw new Error("API Key is missing.");
+  const response = await fetch("/api/generate", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ keywords: keywords.trim().slice(0, 200) }),
+  });
 
-  const ai = new GoogleGenAI({ apiKey });
-  const model = "gemini-2.5-flash";
-
-  const prompt = `
-    Create a short story (approx 300-500 words) weaving together these keywords: "${keywords}".
-    
-    The writing style must be inspired by famous authors, biographies, or autobiographies.
-    
-    CRITICAL REQUIREMENT: You MUST use the 'googleSearch' tool to find real-world inspirations.
-    Identify specific authors, books, and publication years that align with the themes of the user's keywords.
-    
-    Return the response as a valid JSON object with the following structure:
-    {
-      "title": "A creative title for the story",
-      "content": "The full story text...",
-      "inspirations": [
-        {
-          "author": "Name of the author inspired by",
-          "book": "Title of the specific book/biography",
-          "year": "Publication year",
-          "context": "Brief explanation of how this connects to the story",
-          "authorUrl": "URL to the author's biography (e.g., Wikipedia) found via Google Search"
-        }
-      ]
-    }
-    
-    Do not wrap the JSON in markdown code blocks. Just return the raw JSON string if possible, or I will clean it.
-  `;
-
-  try {
-    const response = await ai.models.generateContent({
-      model,
-      contents: prompt,
-      config: {
-        tools: [{ googleSearch: {} }],
-      },
-    });
-    let text = response.text || "";
-    text = text.replace(/```json/g, '').replace(/```/g, '').trim();
-    return JSON.parse(text) as StoryData;
-  } catch (error) {
-    console.error("Story generation failed:", error);
-    throw new Error("Failed to craft your story. Please try again.");
+  const payload: unknown = await response.json().catch(() => null);
+  if (!response.ok) {
+    const message =
+      payload && typeof payload === "object" && "error" in payload && typeof payload.error === "string"
+        ? payload.error
+        : "Failed to craft your story. Please try again.";
+    throw new Error(message);
   }
+
+  return payload as StoryData;
 };
